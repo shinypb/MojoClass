@@ -1,0 +1,16 @@
+mojo.js
+==
+A small implementation of classes and inheritance for JavaScript.
+--
+
+Why?
+--
+I was working on a canvas-based game -- you know, like just about every nerd at some point or another -- and realized that the whole thing would be infinitely easier with classes and inheritance at my disposal. It seemed like a good time to learn some of the intricacies of such things.
+
+Credits
+--
+Thanks for Mozilla for providing an implementation of _bind_ for browsers that don't support it, and John Resig for his [Simple JavaScript Inheritance](http://ejohn.org/blog/simple-javascript-inheritance/) post, which reminded me of the _instanceof_ operator.
+
+Randomly...
+--
+I didn't set out to write a particularly small implementation when I started, but out of curiosity, I poked around a bit to see how mojo compared. If you're looking for something positively tiny, John Resig's Simple JavaScript Inheritance is only 25 lines of code. Eep!
