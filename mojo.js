@@ -1,33 +1,37 @@
 var mojoClass = (function() {
   var mc = {
-    argumentTypes: function(args) {
+    /**
+     *  Returns a comma-separated list of the types of each item in an array.
+     *  If an item is a mojoClass, it will return 'mojo' instead of 'function'.
+     */
+    types: function(array) {
       var types = [], type;
       var i;
-      for(i in args) {
-        type = args[i]._hasMojo ? 'mojo' : typeof(args[i]);
+      for(i = 0; i < array.length; i++) {
+        type = array[i]._hasMojo ? 'mojo' : typeof(array[i]);
         types.push(type);
       }
       return types.join(',');
     },
+    /**
+     *  bind is a recent addition to ECMA-262, 5th edition; this implementation
+     *  for browsers that don't support it was found at
+     *  https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
+     */
     bind: function(that, obj) {
       if(obj.bind) {
         //  Use built-in implementation of bind
         return obj.bind(that);
       }
 
-      /**
-       *  bind is a recent addition to ECMA-262, 5th edition; this implementation for browsers
-       *  that don't support it was found at
-       *  https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
-       */
-        var slice = [].slice,
-            args = slice.call(arguments, 1),
-            self = this,
-            nop = function () {},
-            bound = function () {
-              return self.apply( this instanceof nop ? this : ( obj || {} ),
-                                  args.concat( slice.call(arguments) ) );
-            };
+      var slice = [].slice,
+          args = slice.call(arguments, 1),
+          self = this,
+          nop = function () {},
+          bound = function () {
+            return self.apply( this instanceof nop ? this : ( obj || {} ),
+                                args.concat( slice.call(arguments) ) );
+          };
 
       nop.prototype = self.prototype;
       bound.prototype = new nop();
@@ -38,7 +42,7 @@ var mojoClass = (function() {
 
   return function (/* [baseClass,] constructor, attributes */) {
     var baseClass, constructor, attributes;
-    switch(mc.argumentTypes(arguments)) {
+    switch(mc.types(arguments)) {
       case 'function,object':
         attributes = arguments[1];
         baseClass = null;
@@ -60,7 +64,7 @@ var mojoClass = (function() {
         constructor = function() { };
         break;
       default:
-        throw 'Invalid mojo class declaration: [' + mc.argumentTypes(arguments) + ']';
+        throw 'Invalid mojo class declaration: [' + mc.types(arguments) + ']';
     }
 
     var extend = function(baseObject, additions) {
@@ -121,6 +125,7 @@ var mojoClass = (function() {
     mojoClassFactory._constructor = constructor;
     mojoClassFactory._attributes = attributes;
     mojoClassFactory._hasMojo = true;
+
     return mojoClassFactory;
   };
-}())
+}());
