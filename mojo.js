@@ -14,33 +14,22 @@ var mojoClass = (function() {
       return types.join(',');
     },
     /**
-     *  bind is a recent addition to ECMA-262, 5th edition; this implementation
-     *  for browsers that don't support it was found at
-     *  https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
+     *  Wrapper for bind so we can support browsers without native support.
      */
-    bind: function(that, obj) {
-      if(typeof(obj) !== 'function') {
+    bind: function(that, func) {
+      if(typeof(func) !== 'function') {
         //  Only functions can be bound, but for readability of calling code, we
         //  don't want to worry about calling bind on non-functions.
         return that;
       }
-      if(obj.bind) {
+      if(func.bind) {
         //  Use built-in implementation of bind
-        return obj.bind(that);
+        return func.bind(that);
       }
 
-      var slice = [].slice,
-          args = slice.call(arguments, 1),
-          nop = function () {},
-          bound = function () {
-            return obj.apply( this instanceof nop ? this : ( that || {} ),
-                                args.concat( slice.call(arguments) ) );
-          };
-
-      nop.prototype = obj.prototype;
-      bound.prototype = new nop();
-
-      return bound;
+      return function() {
+        return func.apply(that, arguments);
+      }
     }
   };
 
