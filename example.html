@@ -1,0 +1,48 @@
+<script type="text/javascript" src="mojo.js"></script>
+<script type="text/javascript">
+
+  var helloClass = mojoClass(function() {
+    //  Constructor
+  }, {
+    greeting: 'Hello!',
+    greet: function() {
+      return this.greeting;
+    }
+  });
+  // console.log(helloClass._hasMojo);
+  //
+  // var bonjourClass =mojoClass(helloClass, function() {
+  //   //  Constructor
+  // }, {
+  //   greeting: 'Bonjour!'
+  // });
+  //
+  // var halloClass = mojoClass(helloClass, function() {
+  // }, {
+  //   greet: function() {
+  //     return 'Hallo!';
+  //   }
+  // });
+
+  var canadianHelloClass = mojoClass(helloClass, function() {
+    //  Constructor
+  }, {
+    greeting: 'Hello, eh?',
+    greet: function() {
+      return this._super.greet();
+    }
+  });
+
+  var english = new helloClass();
+  console.log(english.greet());
+
+  // var french = new bonjourClass();
+  // console.log(french.greet());
+  //
+  // var german = new halloClass();
+  // console.log(german.greet());
+
+  var canadian = new canadianHelloClass();
+  console.log(canadian.greet());
+
+</script>
