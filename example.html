@@ -20,11 +20,12 @@
   });
 
   var mark = new Person('Mark');
-  console.log('Person: ' + mark.greet());
-  console.log('Person: ' + mark.greet('Nathalie'));
+  console.log('Person:', mark.greet());
+  console.log('Person:', mark.greet('Nathalie'));
 
   var angryMark = new AngryPerson('Mark');
-  console.log('AngryPerson: ' + angryMark.greet());
-  console.log('AngryPerson: ' + angryMark.greet('Nathalie'));
+  console.log('AngryPerson:', angryMark.greet());
+  console.log('AngryPerson:', angryMark.greet('Nathalie'));
+  console.log('AngryPerson instanceof Person?', angryMark instanceof Person);
 
 </script>

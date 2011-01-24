@@ -121,6 +121,16 @@ var mojoClass = (function() {
     mojoClassFactory._attributes = attributes;
     mojoClassFactory._hasMojo = true;
 
+    //  If we're just making an instance for the .prototype property, don't
+    //  actually run the whole constructor.
+    //  This clever idea from http://ejohn.org/blog/simple-javascript-inheritance/
+    if(mc.makingPrototype) {
+      return false;
+    }
+    mc.makingPrototype = true;
+    mojoClassFactory.prototype = baseClass ? new baseClass() : Object;
+    mc.makingPrototype = false;
+
     return mojoClassFactory;
   };
 }());
