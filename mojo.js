@@ -19,6 +19,11 @@ var mojoClass = (function() {
      *  https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
      */
     bind: function(that, obj) {
+      if(typeof(obj) !== 'function') {
+        //  Only functions can be bound, but for readability of calling code, we
+        //  don't want to worry about calling bind on non-functions.
+        return that;
+      }
       if(obj.bind) {
         //  Use built-in implementation of bind
         return obj.bind(that);
@@ -41,11 +46,10 @@ var mojoClass = (function() {
   };
 
   return function (/* [baseClass,] constructor, attributes */) {
-    var baseClass, constructor, attributes;
+    var baseClass = null, constructor, attributes;
     switch(mc.types(arguments)) {
       case 'function,object':
         attributes = arguments[1];
-        baseClass = null;
         constructor = arguments[0];
         break;
       case 'mojo,function,object':
@@ -60,7 +64,6 @@ var mojoClass = (function() {
         break;
       case 'object':
         attributes = arguments[0];
-        baseClass = null;
         constructor = function() { };
         break;
       default:
@@ -92,11 +95,7 @@ var mojoClass = (function() {
         if(!classAttributes.hasOwnProperty(key)) {
           break;
         }
-        if(typeof(classAttributes[key]) === 'function') {
-          this[key] = mc.bind(this, classAttributes[key]);
-        } else {
-          this[key] = classAttributes[key];
-        }
+        this[key] = mc.bind(this, classAttributes[key]);
       }
 
       //  Our _super property gives us access to the properties and methods of
@@ -107,11 +106,7 @@ var mojoClass = (function() {
           if(!baseClass._attributes.hasOwnProperty(key)) {
             break;
           }
-          if(typeof(baseClass._attributes[key]) === 'function') {
-            this._super[key] = mc.bind(this, baseClass._attributes[key]);
-          } else {
-            this._super[key] = baseClass._attributes[key];
-          }
+          this._super[key] = mc.bind(this, baseClass._attributes[key]);
         }
       }
 
