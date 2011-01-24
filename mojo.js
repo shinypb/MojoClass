@@ -18,23 +18,23 @@ var mojoClass = (function() {
      *  for browsers that don't support it was found at
      *  https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
      */
-    bind: function(that, func) {
-      if(typeof(func) !== 'function') {
+    bind: function(that, obj) {
+      if(typeof(obj) !== 'function') {
         //  Only functions can be bound, but for readability of calling code, we
         //  don't want to worry about calling bind on non-functions.
-        return func;
+        return that;
       }
-      if(func.bind) {
+      if(obj.bind) {
         //  Use built-in implementation of bind
-        return func.bind(that);
+        return obj.bind(that);
       }
 
       var slice = [].slice,
           args = slice.call(arguments, 1),
-          self = func,
+          self = this,
           nop = function () {},
           bound = function () {
-            return self.apply( func instanceof nop ? func : ( that || {} ),
+            return self.apply( this instanceof nop ? this : ( obj || {} ),
                                 args.concat( slice.call(arguments) ) );
           };
 
