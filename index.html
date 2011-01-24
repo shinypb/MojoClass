@@ -1,1 +1,73 @@
-Get some mojo.
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>mojo.js</title>
+  </head>
+  <body>
+    <h1>mojo.js</h1>
+
+    <h2>A small implementation of classes and inheritance for JavaScript.</h2>
+
+    <h2>Why?</h2>
+
+    <p>I was working on a project and realized that the whole thing would be infinitely easier with classes and inheritance at my disposal. It seemed like a good time to learn some of the intricacies of implementing such things.</p>
+
+    <h2>Who?</h2>
+
+    <p>My name is Mark, and I think you're neat. I'm <a href="http://twitter.com/shinypb">@shinypb</a> on Twitter.</p>
+
+    <h2>Example</h2>
+
+    <pre>
+      // Class declarations
+      var Person = mojoClass(function(name) {
+        // This is a constructor
+        this.name = name;
+      }, {
+        greet: function(someoneElse) {
+          if(someoneElse) {
+            return 'Hello, ' + someoneElse + '. My name is ' + this.name + '!';
+          } else {
+            return 'Hello. My name is ' + this.name + '!';
+          }
+        }
+      });
+
+      var AngryPerson = mojoClass(Person, {
+        greet: function(someoneElse) {
+          return this._super.greet(someoneElse).toUpperCase();
+        }
+      });
+
+      // Class usage
+      var mark = new Person('Mark');
+      console.log('Person:', mark.greet());
+      console.log('Person:', mark.greet('Nathalie'));
+
+      var angryMark = new AngryPerson('Mark');
+      console.log('AngryPerson:', angryMark.greet());
+      console.log('AngryPerson:', angryMark.greet('Nathalie'));
+      console.log('AngryPerson instanceof Person?', angryMark instanceof Person);
+    </pre>
+
+    <h2>More details</h2>
+
+    <p>To create a new class, call the mojoClass function. You can pass in a variety of things:</p>
+
+    <ul>
+    <li>The parent class to inherit from (optional)</li>
+    <li>A constructor (optional)</li>
+    <li>An object containing all of the methods and properties of the instance</li>
+    </ul>
+
+    <p>Subclasses can access the methods of their parent class by calling this.super.methodName();</p>
+
+    <h2>Thanks</h2>
+
+    <p>Thanks for Mozilla for providing <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">an implementation of bind</a> for browsers that don't support it, and John Resig for his <a href="http://ejohn.org/blog/simple-javascript-inheritance/">Simple JavaScript Inheritance</a> post, which reminded me of the instanceof operator.</p>
+
+    <h2>Randomly...</h2>
+
+    <p>I didn't set out to write a particularly small implementation when I started, but out of curiosity, I poked around a bit to see how mojo compared. If you're looking for something positively tiny, John Resig's Simple JavaScript Inheritance is only 25 lines of code. Eep!</p>
+  </body>
+</html>
