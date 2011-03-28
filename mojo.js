@@ -20,7 +20,7 @@ var mojoClass = (function() {
       if(typeof(func) !== 'function') {
         //  Only functions can be bound, but for readability of calling code, we
         //  don't want to worry about calling bind on non-functions.
-        return that;
+        return func;
       }
       if(func.bind) {
         //  Use built-in implementation of bind
@@ -33,7 +33,7 @@ var mojoClass = (function() {
     }
   };
 
-  return function (/* [baseClass,] constructor, attributes */) {
+  var mojoClass = function (/* [baseClass,] constructor, attributes */) {
     var baseClass = null, constructor, attributes;
     switch(mc.types(arguments)) {
       case 'function,object':
@@ -89,6 +89,7 @@ var mojoClass = (function() {
       //  Our _super property gives us access to the properties and methods of
       //  the parent class; copy them over, binding the functions to this
       this._super = {};
+      this._superClass = baseClass;
       if(baseClass) {
         for(key in baseClass._attributes) {
           if(!baseClass._attributes.hasOwnProperty(key)) {
@@ -96,11 +97,14 @@ var mojoClass = (function() {
           }
           this._super[key] = mc.bind(this, baseClass._attributes[key]);
         }
+        this._super._constructor = baseClass._constructor;
       }
 
       //  Run the constructor
-      this._constructor = constructor;
-      this._constructor.apply(this, arguments);
+      if(!mc.makingPrototype) {
+        this._constructor = constructor;
+        this._constructor.apply(this, arguments);
+      }
 
       return this;
     };
@@ -121,4 +125,32 @@ var mojoClass = (function() {
 
     return mojoClassFactory;
   };
+
+  /**
+   *  This allows you to define abstract base classes that cannot be
+   *  instantiated directly.
+   *  e.g.  var someClass = mojoClass.abstract(constructor, attributes);
+   */
+  mojoClass.abstract = function() {
+    function wrapConstructor(constructor) {
+      return function() {
+        if(!this._super._constructor) {
+          throw "Cannot instantiate this class directly; subclass it first";
+        }
+        constructor.apply(this, arguments);
+      }
+    }
+
+    var i;
+    for(i = 0; i < arguments.length; i++) {
+      if(typeof arguments[i] === 'function') {
+        arguments[i] = wrapConstructor(arguments[i]);
+        break;
+      }
+    }
+
+    return mojoClass.apply(this, arguments);
+  };
+
+  return mojoClass;
 }());
