@@ -44,6 +44,7 @@ Example
     },
     greet: function(someoneElse) {
       return "Hello, " + someoneElse + " I'm "+ this.fullname() +"!";
+    }
   });
   
   // Class usage
