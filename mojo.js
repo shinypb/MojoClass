@@ -52,7 +52,12 @@ var mojoClass = (function() {
         break;
       case 'object':
         attributes = arguments[0];
-        constructor = function() { };
+        constructor = function() { }; // default empty constructor
+
+        // constructor method in attributes object set constructor
+        if (attributes.hasOwnProperty("initial")) {
+            constructor = attributes.initial;
+        }
         break;
       default:
         throw 'Invalid mojo class declaration: [' + mc.types(arguments) + ']';
