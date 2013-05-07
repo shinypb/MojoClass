@@ -34,6 +34,18 @@ Example
     }
   });
 
+  var OtherPerson = mojoClass({
+    initial: function(first_name, last_name) {
+      this.first_name = first_name;
+      this.last_name = last_name;
+    }, 
+    fullname: function() {
+      return this.first_name + " " + this.last_name; 
+    },
+    greet: function(someoneElse) {
+      return "Hello, " + someoneElse + " I'm "+ this.fullname() +"!";
+  });
+  
   // Class usage
   var mark = new Person('Mark');
   console.log('Person:', mark.greet());
@@ -43,6 +55,10 @@ Example
   console.log('AngryPerson:', angryMark.greet());
   console.log('AngryPerson:', angryMark.greet('Nathalie'));
   console.log('AngryPerson instanceof Person?', angryMark instanceof Person);
+
+  var yasar = new OtherPerson("Yasar", "icli");
+  console.log(yasar.greet("Mark"));
+
 </pre>
 
 More details
